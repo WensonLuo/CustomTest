@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+    android:id="@+id/btn_tower"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="获取基站信息"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:paddingBottom="20dp"
+            android:textSize="20sp"/>
+    </ScrollView>
+
+</LinearLayout>

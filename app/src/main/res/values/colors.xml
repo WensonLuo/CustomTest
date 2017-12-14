@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!--水波纹按钮颜色-->
+    <color name="reveal_color">#FFFFFF</color>
+    <color name="bottom_color">#3086E4</color>
+    <color name="bottom_bg">#40BAF8</color>
+
+    <!--RecyclerView点击颜色变化-->
+    <color name="recy_normal">#44ff0000</color>
+    <color name="recy_press">#88ff0000</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="window_bg">#F0F0F0</color>
+    <color name="title_area_bg">#F54D4F</color>
+    <color name="title_msg_color">#F1F1F1</color>
+    <color name="cell_bg">#F9F9F9</color>
+    <color name="table_divider_color">#C9C9C9</color>
+    <color name="divide_line">#D8D8D8</color>
+    <!-- 分割线的颜色 -->
+    <color name="bg_keyboard_pressed">#eeeeee</color>
+    <color name="cl_keyboard_num_normal">#333333</color>
+    <color name="cl_keyboard_num_pressed">#333333</color>
+    <color name="dark_red">#bd0f17</color>
+    <color name="bright_red">#ed1823</color>
+    <color name="light_gray">#aaaaaa</color>
+
+    <!-- 退格键背景色 -->
+    <color name="back_btn_bg">#FFFFFF</color>
+    <!-- 确定键背景色 -->
+    <color name="ok_btn_bg">#F54D4F</color>
+    <!-- 取消键背景色 -->
+    <color name="cancel_btn_bg">#FFFFFF</color>
+    <color name="content_font_color">#92959E</color>
+    <!-- 金额和密码显示界面背景色 -->
+    <color name="amoutAndpin_view_bg">#F3F4F6</color>
+    <!-- 键盘背景色 -->
+    <color name="keyboard_view_bg">#FFFFFF</color>
+    <!-- 密码圆点颜色背景色 -->
+    <color name="cl_pwd_symbol">#333333</color>
+
+</resources>

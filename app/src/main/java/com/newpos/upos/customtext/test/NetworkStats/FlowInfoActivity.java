@@ -17,8 +17,13 @@ import android.widget.TextView;
 import com.newpos.upos.customtext.R;
 import com.newpos.upos.customtext.exercise.recy.DividerItemDecoration;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FlowInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -152,7 +157,56 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
         signalMobileFlow = TrafficStats.getUidRxBytes(ai.uid) + TrafficStats.getUidTxBytes(ai.uid);
+        if (signalMobileFlow == 0 || (TrafficStats.getUidRxBytes(ai.uid) == -1) && (TrafficStats.getUidTxBytes(ai.uid) == -1)) {
+            signalMobileFlow = getTotalBytesManual(ai.uid);
+        }
         Log.d(TAG, "onClick: UID IS:" + ai.uid);
         return String.valueOf(signalMobileFlow) + "KB";
+    }
+
+    /**
+     * 通过uid查询文件夹中的数据
+     * @param localUid
+     * @return
+     */
+    private Long getTotalBytesManual(int localUid) {
+//        Log.e("BytesManual*****", "localUid:" + localUid);
+        File dir = new File("/proc/uid_stat/");
+        String[] children = dir.list();
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < children.length; i++) {
+            stringBuffer.append(children[i]);
+            stringBuffer.append("   ");
+        }
+//        Log.e("children*****", children.length + "");
+//        Log.e("children22*****", stringBuffer.toString());
+        if (!Arrays.asList(children).contains(String.valueOf(localUid))) {
+            return 0L;
+        }
+        File uidFileDir = new File("/proc/uid_stat/" + String.valueOf(localUid));
+        File uidActualFileReceived = new File(uidFileDir, "tcp_rcv");
+        File uidActualFileSent = new File(uidFileDir, "tcp_snd");
+        String textReceived = "0";
+        String textSent = "0";
+        try {
+            BufferedReader brReceived = new BufferedReader(new FileReader(uidActualFileReceived));
+            BufferedReader brSent = new BufferedReader(new FileReader(uidActualFileSent));
+            String receivedLine;
+            String sentLine;
+
+            if ((receivedLine = brReceived.readLine()) != null) {
+                textReceived = receivedLine;
+//                Log.e("receivedLine*****", "receivedLine:" + receivedLine);
+            }
+            if ((sentLine = brSent.readLine()) != null) {
+                textSent = sentLine;
+//                Log.e("sentLine*****", "sentLine:" + sentLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+//            Log.e("IOException*****", e.toString());
+        }
+//        Log.e("BytesManualEnd*****", "localUid:" + localUid);
+        return Long.valueOf(textReceived).longValue() + Long.valueOf(textSent).longValue();
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.newpos.upos.customtext.test.FlowInfoActivity">
+    tools:context="com.newpos.upos.customtext.test.NetworkStats.FlowInfoActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"/>
     </LinearLayout>
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
@@ -56,5 +56,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"/>
-    </LinearLayout>
+    </LinearLayout>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/single_app_recy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 </LinearLayout>

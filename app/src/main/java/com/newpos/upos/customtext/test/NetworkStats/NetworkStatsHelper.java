@@ -1,4 +1,4 @@
-package com.newpos.upos.customtext.test;
+package com.newpos.upos.customtext.test.NetworkStats;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -33,6 +33,7 @@ public class NetworkStatsHelper {
         this.packageUid = packageUid;
     }
 
+    //拿到今天0点到当前，设备总的移动流量消耗
     public long getAllTodayMobile(Context context) {
         NetworkStats.Bucket bucket;
         try {
@@ -46,6 +47,7 @@ public class NetworkStatsHelper {
         return bucket.getTxBytes() + bucket.getRxBytes();
     }
 
+    //返回一个月，设备总的移动流量消耗
     public long getAllMonthMobile(Context context) {
         NetworkStats.Bucket bucket;
         try {
@@ -59,6 +61,7 @@ public class NetworkStatsHelper {
         return bucket.getRxBytes() + bucket.getTxBytes();
     }
 
+    //返回开机到现在，设备总的接收wifi流量消耗
     public long getAllRxBytesWifi() {
         NetworkStats.Bucket bucket;
         try {
@@ -72,6 +75,7 @@ public class NetworkStatsHelper {
         return bucket.getRxBytes();
     }
 
+    //返回开机到现在，设备总的发送wifi流量消耗
     public long getAllTxBytesWifi() {
         NetworkStats.Bucket bucket;
         try {

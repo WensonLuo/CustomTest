@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -41,18 +42,43 @@
         <activity android:name=".test.CameraActivity" />
         <activity android:name=".exercise.WaterBtnActivity" />
         <activity android:name=".exercise.RecyclerViewActivity" />
-        <activity android:name=".test.RegisterActivity"></activity>
+        <activity android:name=".test.RegisterActivity" />
         <activity android:name=".exercise.LoginActivity" />
         <activity android:name=".exercise.LoginSuccessActivity" />
-        <activity android:name=".test.NetStateChangeActivity"></activity>
+        <activity android:name=".test.NetStateChangeActivity" />
         <activity android:name=".test.SocketClientActivity" />
-        <activity android:name=".test.FlowInfoActivity">
+        <activity android:name=".test.NetworkStats.FlowInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".test.NetworkStats.receiver.BootCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".test.NetworkStats.receiver.WiFiStateChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".test.NetworkStats.receiver.ShutdownReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

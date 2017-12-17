@@ -1,10 +1,12 @@
 package com.newpos.upos.customtext.test.NetworkStats;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.newpos.upos.customtext.R;
@@ -16,12 +18,14 @@ import java.util.List;
  */
 
 public class SingleStatsAdapter extends RecyclerView.Adapter<SingleStatsAdapter.RecyViewHolder>{
-    private List<SingleStatsBean> mData;
+    private List<SingleStatsModel> mData;
     private Context mContext;
+    PackageManager pm;
 
-    public SingleStatsAdapter(List<SingleStatsBean> mData, Context mContext) {
+    public SingleStatsAdapter(List<SingleStatsModel> mData, Context mContext) {
         this.mData = mData;
         this.mContext = mContext;
+        pm = mContext.getPackageManager();
     }
 
     public interface OnItemClickListener{
@@ -44,9 +48,10 @@ public class SingleStatsAdapter extends RecyclerView.Adapter<SingleStatsAdapter.
 
     @Override
     public void onBindViewHolder(final RecyViewHolder holder, int position) {
-        holder.appName.setText(mData.get(position).getAppName());
+        holder.appName.setText(mData.get(position).getAppInfo().loadLabel(mContext.getPackageManager()).toString());
         holder.mobile.setText(mData.get(position).getMobileConsume());
         holder.wifi.setText(mData.get(position).getWifiConsume());
+        holder.icLauncher.setImageDrawable(mData.get(position).getAppInfo().loadIcon(pm));
         // 如果设置了回调，则设置点击事件
         if (mOnItemClickListener != null)
         {
@@ -78,7 +83,7 @@ public class SingleStatsAdapter extends RecyclerView.Adapter<SingleStatsAdapter.
         return mData.size();
     }
 
-    public void addData(int position, SingleStatsBean bean) {
+    public void addData(int position, SingleStatsModel bean) {
         mData.add(position, bean);
         notifyItemInserted(position);
     }
@@ -90,11 +95,13 @@ public class SingleStatsAdapter extends RecyclerView.Adapter<SingleStatsAdapter.
 
     class RecyViewHolder extends RecyclerView.ViewHolder{
         TextView appName,mobile,wifi;
+        ImageView icLauncher;
         public RecyViewHolder(View itemView) {
             super(itemView);
             appName = (TextView) itemView.findViewById(R.id.app_name);
             mobile = (TextView) itemView.findViewById(R.id.app_mobile_tv);
             wifi = (TextView) itemView.findViewById(R.id.app_wifi_tv);
+            icLauncher = (ImageView) itemView.findViewById(R.id.app_launcher);
         }
     }
 }

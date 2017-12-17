@@ -1,6 +1,7 @@
 package com.newpos.upos.customtext.test.NetworkStats;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,18 +29,27 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FlowInfoActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "luo-FlowInfo";
     public static final String PACKAGE_NAME = "com.ums.tss.mastercontrol";
-    public static final int GB = 1024 * 1024;
-    public static final int MB = 1024;
-    public static final int KB = 1;
-    DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+    private static final String TAG = "luo-FlowInfo";
     private Button totalMobile, totalWifi, singleMobile;
     private TextView totalMobileTv, totalWifiTv, singleMobileTv;
     private RecyclerView showSingleApp;
     private long totalMobileFlow, totalWifiFlow, signalMobileFlow;
-    private List<SingleStatsBean> mList;
+    private List<SingleStatsModel> mList;
     private SingleStatsAdapter mAdapter;
+
+    public static boolean isSystemApplication(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = manager.getPackageInfo(packageName, PackageManager.GET_CONFIGURATIONS);
+            if ((packageInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +60,12 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
         setAction();
     }
 
-
     private void initView() {
         totalMobile = (Button) findViewById(R.id.total_mobile_btn);
         totalWifi = (Button) findViewById(R.id.total_wifi_btn);
-//        singleMobile = (Button) findViewById(R.id.single_mobile_btn);
         totalMobileTv = (TextView) findViewById(R.id.total_mobile_tv);
         totalWifiTv = (TextView) findViewById(R.id.total_wifi_tv);
-//        singleMobileTv = (TextView) findViewById(R.id.single_mobile_tv);
         showSingleApp = (RecyclerView) findViewById(R.id.single_app_recy);
-
     }
 
     private void initListener() {
@@ -72,16 +79,17 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
         initViewData();
     }
 
-
     private void initData() {
-        mList = new ArrayList<SingleStatsBean>();
+        mList = new ArrayList<SingleStatsModel>();
         List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
 
         for (int i = 0; i < packages.size(); i++) {
             PackageInfo packageInfo = packages.get(i);
-            SingleStatsBean singleStats = new SingleStatsBean();
-            singleStats.setAppName(packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
-
+            if (isSystemApplication(this, packageInfo.packageName)) {
+                continue;
+            }
+            SingleStatsModel singleStats = new SingleStatsModel();
+            singleStats.setAppInfo(packageInfo.applicationInfo);
             singleStats.setMobileConsume("");
             singleStats.setWifiConsume("总流量：" + getSingleBytesWifi(packageInfo.packageName));
 //            tmpInfo.appName = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
@@ -102,7 +110,6 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
         showSingleApp.setAdapter(mAdapter);
     }
 
-
     @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
@@ -110,40 +117,18 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
             case R.id.total_mobile_btn:
                 long thisTimeMobile = TrafficStats.getMobileRxBytes() + TrafficStats.getMobileTxBytes();
                 totalMobileFlow = thisTimeMobile + FlowInfoConstants.lastBootTotalMobile;
-                Log.d(TAG, "onClick: ");
-                if (totalMobileFlow / GB >= 1) {
-                    totalMobileTv.setText(df.format((double) totalMobileFlow / GB) + "GB");
-                } else if (totalWifiFlow / MB >= 1) {
-                    totalMobileTv.setText(df.format((double) totalMobileFlow / MB) + "MB");
-                } else {
-                    totalMobileTv.setText(String.valueOf(totalMobileFlow / KB) + "KB");
-                }
+                totalMobileTv.setText(Formatter.formatFileSize(FlowInfoActivity.this, totalMobileFlow));
+                Log.i(TAG, "TrafficStats.getMobileRxBytes() = " + TrafficStats.getMobileRxBytes());
+                Log.i(TAG, "TrafficStats.getMobileTxBytes() = " + TrafficStats.getMobileTxBytes());
+                Log.i(TAG, "TrafficStats.getTotalRxBytes() = " + TrafficStats.getTotalRxBytes());
+                Log.i(TAG, "TrafficStats.getTotalTxBytes() = " + TrafficStats.getTotalTxBytes());
                 break;
             case R.id.total_wifi_btn:
                 long thisTimeWifi = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes() -
                         FlowInfoConstants.thisOpenTotalWifi;
                 totalWifiFlow = thisTimeWifi + FlowInfoConstants.beforeTotalWifi;
-                if (totalWifiFlow / GB >= 1) {
-                    totalWifiTv.setText(df.format((double) totalWifiFlow / GB) + "GB");
-                } else if (totalWifiFlow / MB >= 1) {
-                    totalWifiTv.setText(df.format((double) totalWifiFlow / MB) + "MB");
-                } else {
-                    totalWifiTv.setText(String.valueOf(totalWifiFlow / KB) + "KB");
-                }
-
+                totalWifiTv.setText(Formatter.formatFileSize(FlowInfoActivity.this, totalWifiFlow));
                 break;
-//            case R.id.single_mobile_btn:
-//                PackageManager pm = getPackageManager();
-//                ApplicationInfo ai = null;
-//                try {
-//                    ai = pm.getApplicationInfo(PACKAGE_NAME, PackageManager.GET_ACTIVITIES);
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                Log.d(TAG, "onClick: UID IS:" + ai.uid);
-//                signalMobileFlow = TrafficStats.getUidRxBytes(ai.uid);
-//                singleMobileTv.setText(String.valueOf(signalMobileFlow) + "kb");
-//                break;
         }
     }
 
@@ -157,15 +142,19 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
         signalMobileFlow = TrafficStats.getUidRxBytes(ai.uid) + TrafficStats.getUidTxBytes(ai.uid);
+        Log.d(TAG, "onClick: UID IS:" + ai.uid + ",packageName = " + packageName +",signalMobileFlow = " + signalMobileFlow);
+        Log.i(TAG, "TrafficStats.getUidRxBytes(ai.uid) = " + TrafficStats.getUidRxBytes(ai.uid));
+        Log.i(TAG, "TrafficStats.getUidTxBytes(ai.uid) = " + TrafficStats.getUidTxBytes(ai.uid));
         if (signalMobileFlow == 0 || (TrafficStats.getUidRxBytes(ai.uid) == -1) && (TrafficStats.getUidTxBytes(ai.uid) == -1)) {
             signalMobileFlow = getTotalBytesManual(ai.uid);
         }
-        Log.d(TAG, "onClick: UID IS:" + ai.uid);
-        return String.valueOf(signalMobileFlow) + "KB";
+
+        return Formatter.formatFileSize(FlowInfoActivity.this,signalMobileFlow);
     }
 
     /**
      * 通过uid查询文件夹中的数据
+     *
      * @param localUid
      * @return
      */
@@ -173,6 +162,9 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
 //        Log.e("BytesManual*****", "localUid:" + localUid);
         File dir = new File("/proc/uid_stat/");
         String[] children = dir.list();
+        if (children == null) {
+            return 0L;
+        }
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < children.length; i++) {
             stringBuffer.append(children[i]);
@@ -209,4 +201,5 @@ public class FlowInfoActivity extends AppCompatActivity implements View.OnClickL
 //        Log.e("BytesManualEnd*****", "localUid:" + localUid);
         return Long.valueOf(textReceived).longValue() + Long.valueOf(textSent).longValue();
     }
+
 }

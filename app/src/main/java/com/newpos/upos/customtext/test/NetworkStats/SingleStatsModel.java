@@ -1,20 +1,22 @@
 package com.newpos.upos.customtext.test.NetworkStats;
 
+import android.content.pm.ApplicationInfo;
+
 /**
  * Created by Wenson_Luo on 2017/12/15.
  */
 
-public class SingleStatsBean {
-    private String appName;
+public class SingleStatsModel {
+    private ApplicationInfo appInfo;
     private String mobileConsume;
     private String wifiConsume;
 
-    public String getAppName() {
-        return appName;
+    public ApplicationInfo getAppInfo() {
+        return appInfo;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppInfo(ApplicationInfo appInfo) {
+        this.appInfo = appInfo;
     }
 
     public String getMobileConsume() {
@@ -35,7 +37,7 @@ public class SingleStatsBean {
 
     @Override
     public String toString() {
-        return "SingleStatsBean: appName = " + getAppName() + ",mobileConsume = " + getMobileConsume() +
+        return "SingleStatsModel: appName = " + appInfo.name + ",mobileConsume = " + getMobileConsume() +
                 ",wifiConsume = " + getWifiConsume();
     }
 }

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CustomTest.iml" filepath="$PROJECT_DIR$/CustomTest.iml" />
+      <module fileurl="file://F:\03_Code\AndroidStudioProjects\02_DailyTest\CustomText\CustomTest.iml" filepath="F:\03_Code\AndroidStudioProjects\02_DailyTest\CustomText\CustomTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CustomText.iml" filepath="$PROJECT_DIR$/CustomText.iml" />
       <module fileurl="file://F:\03_Code\AndroidStudioProjects\02_TestDemo\CustomTest\CustomText.iml" filepath="F:\03_Code\AndroidStudioProjects\02_TestDemo\CustomTest\CustomText.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://F:\03_Code\AndroidStudioProjects\02_TestDemo\CustomTest\app\app.iml" filepath="F:\03_Code\AndroidStudioProjects\02_TestDemo\CustomTest\app\app.iml" />
